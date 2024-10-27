@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection App</title>
+</head>
+<body>
+    <h1>Object Detection App</h1>
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="snapshot" style="display:none;"></canvas>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
