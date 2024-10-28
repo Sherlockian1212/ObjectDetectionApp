@@ -1,6 +1,7 @@
 pip
 toml
 wheel
+setuptools
 cryptography
 lxml
 tornado
