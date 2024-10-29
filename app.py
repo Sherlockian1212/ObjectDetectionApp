@@ -1,8 +1,7 @@
 import base64
 import io
 import os
-import torch
-from flask import Flask, request, jsonify, send_from_directory, render_template
+from flask import Flask, request, jsonify, render_template
 from PIL import Image
 from gtts import gTTS
 from ultralytics import YOLO
@@ -47,20 +46,30 @@ def detect():
             class_ids = result.boxes.cls
             for class_id in class_ids:
                 class_name = class_names[int(class_id)]
-                print(class_name)
                 detected_objects.append(class_name)
             
-    if detected_objects:
-        speak_results(detected_objects)
+    # Đếm số lượng từng đối tượng
+    object_counts = {}
+    for obj in detected_objects:
+        if obj in object_counts:
+            object_counts[obj] += 1
+        else:
+            object_counts[obj] = 1
 
-    return jsonify({"detected_objects": detected_objects})
+    # Chuyển thành chuỗi văn bản dạng "two person, two chair"
+    detected_summary = ', '.join([f"{count} {name}" for name, count in object_counts.items()])
+    print(detected_summary)
+    if detected_summary:
+        speak_results(detected_summary)
+
+    return jsonify({"detected_objects": detected_summary})
 
 def speak_results(objects):
-    text = ', '.join(objects)
-    tts = gTTS(text, lang='en')
+    tts = gTTS(objects, lang='en')
+    if os.path.exists("result.mp3"):
+        os.remove("result.mp3")
     tts.save("result.mp3")
     playsound("result.mp3")
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 4000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(debug=True)
