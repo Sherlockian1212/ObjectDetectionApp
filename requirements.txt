@@ -3,3 +3,4 @@ Pillow==9.1.1
 gTTS==2.4.0
 ultralytics==8.3.23
 playsound==1.2.2
+gunicorn
